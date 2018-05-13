@@ -53,6 +53,7 @@ jar {
 
     from('src/main/java') {
         include 'templates/*'
+        include 'static/**'
     }
 
     manifest {
