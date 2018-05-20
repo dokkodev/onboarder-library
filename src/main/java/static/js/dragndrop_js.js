@@ -1,4 +1,40 @@
+var onboardings = {};
+var dummyWebsite = "naver.org";
+
 $(document).ready(function(){
+    var JSON = {
+        "url": "naver.com",
+        "sequence_list": [
+            {
+                "order": "1",
+                "content": "This section allows users to select the type of article they want to view (in this case, sports).",
+                "selector": "a",
+                "index": "27"
+            },
+            {
+                "order": "2",
+                "content": "This section shows the current most popular search keyword. :)",
+                "selector": "h3",
+                "index": "1"
+            }
+        ],
+        "swipe_list": [
+            {
+                "order": "1",
+                "url": "swipe1.png"
+            },
+            {
+                "order": "2",
+                "url": "swipe2.png"
+            },
+            {
+                "order": "3",
+                "url": "swipe3.png"
+            }
+        ]
+    }
+
+    console.log(JSON);
 
 
     function getRotated(){
@@ -240,8 +276,36 @@ $(document).ready(function(){
                     $('.speech_bubble').css('top',offset['top']-scrollTop-height-10+'px');
                     $('.speech_bubble').css('left',offset['left']-scrollLeft+'px');
 
-                    console.log($(this).offset());
-                    console.log($(this).css(''));
+                    var tag = $(this).prop("tagName");
+                    var list = $('#iframe').contents().find(tag);
+
+                    var this_var = $(this);
+                    var index = 0;
+
+                    list.each(function(i){
+                        if ($(this).is(this_var)){
+                            console.log('yes');
+                            return false;
+                        }
+                        else{
+                            console.log('no');
+                        }
+                        index++;
+                    });
+
+                    console.log(index);
+
+                    // $('#iframe').contents().find(tag+':eq('+index+')').css('background-color','red');
+
+                    // SAVE THE CURRENT ONBOARDING INFORMATION
+                    onboardings.url = dummyWebsite;
+                    onboardings.sequenceOnboardings = [
+                        {
+                            order : index,
+                            selector : $(this)[0].tagName
+                        }
+                    ];
+
                     $(this).unbind('hover').hover();
                 });
 
@@ -486,6 +550,7 @@ $(document).ready(function(){
 
     $('.bubble_text').on('input',function(){
         $('.speech_bubble').text($(this).val());
+        onboardings.sequenceOnboardings[0].content = $(this).val();
         console.log($(this).val());
     });
 
