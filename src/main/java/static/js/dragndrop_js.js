@@ -1,3 +1,5 @@
+var iFrameAlreadyLoaded = false;
+
 // 지금 현재 맥시멈 인덱스
 var maxOrderIndex = 0;
 
@@ -80,6 +82,9 @@ function resetGlobalsOnDelete(index) {
 function load_onboardings(onboardingJSONS){
     globalJSON = onboardingJSONS;
 
+    if (!onboardingJSONS) {
+        return;
+    }
     // 각 온보딩에 대해서
     onboardingJSONS['onboardings'].forEach(function(element){
         var icon_src = '';
@@ -108,6 +113,7 @@ function load_onboardings(onboardingJSONS){
 
         var onboarding_div = $("<div class='onboarding'></div>");
         onboarding_div.data('index', element.order);
+        console.log(onboarding_div.data('index'));
 
         var name = $("<div class='name'>"+element['name']+"</div>");
 
@@ -133,7 +139,7 @@ function load_onboardings(onboardingJSONS){
         // delete 버튼 누르면 ui 에서도 지우고 json 에서도 지운다.
         delete_button.on('click',function(){
             $(this).parent().remove();
-            resetGlobalsOnDelete(element.order);
+            resetGlobalsOnDelete(onboarding_div.data('index'));
             // TODO : 이러 관리해야 할듯
             // maxOrderIndex--;
         });
@@ -142,9 +148,9 @@ function load_onboardings(onboardingJSONS){
         edit_button.attr('src','edit_icon.png');
         // edit 버튼 누르면 역시 focus change 한다.
         edit_button.on('click',function(){
+            changeFocus(onboarding_div.data('index'));
             new_onboarding($(this).parent(),$(this).parent().find('.name').text(),icon);
             $(this).parent().remove();
-            changeFocus(focusOnboarding.order);
         });
 
         icon.css('margin-left','0');
@@ -222,7 +228,17 @@ function new_onboarding(div, new_name, icon){
 
         //JSON WRITE NAME
         focusOnboarding.name = new_onboarding_name;
-        globalJSON.onboardings.push(focusOnboarding);
+        if (!globalJSON) {
+            globalJSON = {};
+            globalJSON.onboardings = [];
+            //TODO
+            globalJSON.url = 'naver.html';
+        }
+        if(globalJSON.onboardings[focusOnboarding.order]) {
+            globalJSON.onboardings[focusOnboarding.order] = focusOnboarding;
+        } else {
+            globalJSON.onboardings.push(focusOnboarding);
+        }
 
         $('.new_onboarding_input').replaceWith(onboarding_div);
     }
@@ -288,24 +304,27 @@ function show_section(icon,index){
             // $('.anchor_text').css('color','#4286f4');
             $('#iframe').attr('scrolling','no');
 
-            var found_div = $('#iframe').contents().find(element['selector']+':eq('+element['index']+')');
 
-            var offset = found_div.offset();
-            offset['top'] += $('#iframe').position()['top'];
-            offset['left'] += $('#iframe').position()['left'];
-            var scrollTop = $('#iframe').contents().scrollTop();
-            var scrollLeft = $('#iframe').contents().scrollLeft();
+            if (element.selector) {
+                var found_div = $('#iframe').contents().find(element['selector']+':eq('+element['index']+')');
 
-            var height = $('.speech_bubble').outerHeight();
+                var offset = found_div.offset();
+                offset['top'] += $('#iframe').position()['top'];
+                offset['left'] += $('#iframe').position()['left'];
+                var scrollTop = $('#iframe').contents().scrollTop();
+                var scrollLeft = $('#iframe').contents().scrollLeft();
 
-            $('.speech_bubble').css('top',offset['top']-scrollTop-height-10+'px');
-            $('.speech_bubble').css('left',offset['left']-scrollLeft+'px');
+                var height = $('.speech_bubble').outerHeight();
 
-            $('.bubble_text').text(element['content']);
-            $('.speech_bubble').text(element['content']);
-            // console.log(element['content']);
-            // console.log(element['selector']);
-            // console.log(element['index']);
+                $('.speech_bubble').css('top',offset['top']-scrollTop-height-10+'px');
+                $('.speech_bubble').css('left',offset['left']-scrollLeft+'px');
+
+                $('.bubble_text').text(element['content']);
+                $('.speech_bubble').text(element['content']);
+                // console.log(element['content']);
+                // console.log(element['selector']);
+                // console.log(element['index']);
+            }
         }
         // console.log(JSON['onboardings_list'][index]);
     }
@@ -508,8 +527,12 @@ $(document).ready(function(){
 
         // Added by Jae-Seo
         // TODO : 실제 서버코드에서는 윗줄 (getOnboardingsByUrl) 을 써야함 (load_onboardings 대신에)
-        //getOnboardingsByUrl(url);
-        load_onboardings(globalJSON);
+        if (!iFrameAlreadyLoaded) {
+            iFrameAlreadyLoaded = true;
+            getOnboardingsByUrl(url);
+            //load_onboardings(globalJSON);
+        }
+
     });
 
     $('.anchor_button').on('click',function(){
@@ -594,6 +617,8 @@ $(document).ready(function(){
                     //JSON WRITE TAG(SELECTOR) AND INDEX
                     console.log(tag);
                     console.log(index);
+                    focusOnboarding.selector = tag;
+                    focusOnboarding.index = index;
 
                     $(this).unbind('hover').hover();
                 });
@@ -838,6 +863,7 @@ $(document).ready(function(){
 
         //JSON WRITE content
         console.log($(this).val());
+        focusOnboarding.content = $(this).val();
     });
 
 
