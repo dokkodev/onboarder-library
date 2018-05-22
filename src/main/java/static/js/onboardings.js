@@ -19,6 +19,7 @@ saveOnboardings = function() {
         data: JSON.stringify(globalJSON)
     }).then(function (data) {
         console.log("Saved Successfully!");
+        alert("Saved Successfully! :)");
     });
 };
 
