@@ -9,6 +9,8 @@ var currentOrder = -1;
 // 지금 포커스 되어 있는 온보딩 정보들 (위의 current order 와 중복)
 var focusOnboarding = {};
 
+var current_url="";
+
 // global 변수 JSON, 페이지 로딩 될때 ($('#iframe').on('load'... 참조) 값이 바뀐다. (밑에는 그냥 format 보여주기 용)
 var globalJSON = {
     "url": "naver.html",
@@ -83,8 +85,16 @@ function load_onboardings(onboardingJSONS){
     globalJSON = onboardingJSONS;
 
     if (!onboardingJSONS) {
-        return;
+        globalJSON = {};
+        globalJSON.onboardings = [];
+        globalJSON.url = current_url;
     }
+
+    else {
+        globalJSON.url = onboardingJSONS['url'];
+    }
+    $(".onboarding").remove();
+
     // 각 온보딩에 대해서
     onboardingJSONS['onboardings'].forEach(function(element){
         var icon_src = '';
@@ -168,7 +178,7 @@ function load_onboardings(onboardingJSONS){
     });
 }
 
-// 새로운 온보딩을 만드는 펑션
+// 새로운 온보딩을 만드는 function
 function new_onboarding(div, new_name, icon){
     var input = $("<input class='new_onboarding_input'/>");
     div.before(icon);
@@ -232,7 +242,7 @@ function new_onboarding(div, new_name, icon){
             globalJSON = {};
             globalJSON.onboardings = [];
             //TODO
-            globalJSON.url = 'naver.html';
+            globalJSON.url = url;
         }
         if(globalJSON.onboardings[focusOnboarding.order]) {
             globalJSON.onboardings[focusOnboarding.order] = focusOnboarding;
@@ -523,7 +533,6 @@ $(document).ready(function(){
 
     // iframe 이 다 로딩되면 그때 온보딩 불러와야 함.
     $('#iframe').on('load',function(){
-        $('.anchor_button').toggleClass('waiting');
 
         // Added by Jae-Seo
         // TODO : 실제 서버코드에서는 윗줄 (getOnboardingsByUrl) 을 써야함 (load_onboardings 대신에)
@@ -536,7 +545,6 @@ $(document).ready(function(){
     });
 
     $('.anchor_button').on('click',function(){
-        if (!$('.anchor_button').hasClass('waiting')){
             $('.anchor_button').toggleClass('ON');
             if ($('.anchor_button').hasClass('ON')){
                 $('.anchor_text').text('ANCHORING ON');
@@ -637,11 +645,22 @@ $(document).ready(function(){
                 $('.anchor').css('display','none');
 
                 // RELOAD IFRAME
-                $('.anchor_button').toggleClass('waiting');
                 $('#iframe').attr( 'src', function ( i, val ) { return val; });
             }
-        }
+
     });
+
+    // url 검색
+    $('.url_submit').on('click', function () {
+        var new_url = $(".url_text").val();
+        url = new_url;
+        current_url = new_url;
+        iFrameAlreadyLoaded = false;
+        $('#iframe').attr('src', url);
+
+
+        });
+
 
     //   $('.bubble').on('click',function(){
     //   	var clone = $(this).clone();

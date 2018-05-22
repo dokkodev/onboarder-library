@@ -6,6 +6,8 @@ getOnboardingsByUrl = function(url) {
         data: {url: url}
     }).then(function (data) {
         load_onboardings(JSON.parse(data));
+
+
     });
 };
 
