@@ -59,13 +59,13 @@ function changeFocus(index) {
     console.log("changing focus to : ", index);
     console.log("current Order: ", currentOrder);
 
-    if (currentOrder != -1) {
-        globalJSON.onboardings[currentOrder - 1] = focusOnboarding;
+    if (currentOrder != -1 && index != -1) {
+        globalJSON.onboardings[currentOrder] = focusOnboarding;
     }
     currentOrder = index;
 
     if (index != -1) {
-        focusOnboarding = globalJSON.onboardings[currentOrder - 1];
+        focusOnboarding = globalJSON.onboardings[currentOrder];
     } else {
         focusOnboarding = {};
     }
@@ -136,6 +136,7 @@ function load_onboardings(onboardingJSONS){
             //var index = $(this).parent().index()-1;
 
             // focus 전환
+            console.log(onboarding_div.data('index'));
             changeFocus(onboarding_div.data('index'));
 
             // UI 보여주기
@@ -150,8 +151,11 @@ function load_onboardings(onboardingJSONS){
         delete_button.on('click',function(){
             $(this).parent().remove();
             resetGlobalsOnDelete(onboarding_div.data('index'));
-            // TODO : 이러 관리해야 할듯
-            // maxOrderIndex--;
+
+            for (var i = 0; i < globalJSON.onboardings.length; i++) {
+                globalJSON.onboardings[i].order = i;
+            }
+            maxOrderIndex--;
         });
 
         var edit_button = $("<img class='edit_onboarding' />");
@@ -200,7 +204,7 @@ function new_onboarding(div, new_name, icon){
 
         var name = $("<div class='name'>"+new_onboarding_name+"</div>");
 
-        // 얘를 다시 누르면 포커스도 바꿔주고 센션도 보여주자
+        // 얘를 다시 누르면 포커스도 바꿔주고 섹션도 보여주자
         name.on('click',function(){
             $('.onboarding').removeClass('selected');
             if (!$(this).parent().hasClass('selected')){
@@ -215,14 +219,19 @@ function new_onboarding(div, new_name, icon){
         delete_button.on('click',function(){
             $(this).parent().remove();
             resetGlobalsOnDelete(onboarding_div.data('index'));
+
+            for (var i = 0; i < globalJSON.onboardings.length; i++) {
+                globalJSON.onboardings[i].order = i;
+            }
+            maxOrderIndex--;
         });
 
         var edit_button = $("<img class='edit_onboarding' />");
         edit_button.attr('src','edit_icon.png');
         edit_button.on('click',function(){
+            changeFocus(onboarding_div.data('index'));
             new_onboarding($(this).parent(),$(this).parent().find('.name').text(),icon);
             $(this).parent().remove();
-            changeFocus(onboarding_div.data('index'));
         });
 
         icon.css('margin-left','0');
@@ -245,12 +254,15 @@ function new_onboarding(div, new_name, icon){
             globalJSON.url = url;
         }
         if(globalJSON.onboardings[focusOnboarding.order]) {
+            console.log("Replacing");
             globalJSON.onboardings[focusOnboarding.order] = focusOnboarding;
         } else {
+            console.log("Pushing");
             globalJSON.onboardings.push(focusOnboarding);
         }
 
         $('.new_onboarding_input').replaceWith(onboarding_div);
+        show_section(icon, focusOnboarding.order);
     }
 
     // 엔터 누르면 포커스 오프
@@ -268,6 +280,8 @@ function new_onboarding(div, new_name, icon){
 // 온보딩을 중앙화면에 그려줌
 function show_section(icon,index){
     $('._section').css('display','none');
+    $('.anchor_fix').css('display', 'none');
+
     if (icon.attr('id')=='popup'){
         $('.popup._section').css('display','inline-block');
     }
@@ -282,12 +296,14 @@ function show_section(icon,index){
     if (index>=0){
 
         // 인덱스로 globalJSON 에서 뽑아온다.
-        var element = globalJSON['onboardings'][index - 1];
+        var element = globalJSON['onboardings'][index];
         var type = element['type'];
         if(type=='Swipe'){
             //CLEAN
             $('.speech_bubble').css('display','none');
             $('.speech_bubble_div').find("img").remove();
+            $('.speech_bubble_div').css('display','block');
+
 
             // image url 이 없을수도 있음
             if (element.image_url) {
@@ -305,6 +321,7 @@ function show_section(icon,index){
             $('.speech_bubble_div').find("img").remove();
             $('.speech_bubble_div').css('margin-top','4px');
             $('.speech_bubble').css('display','block');
+            $('.speech_bubble_div').css('display','block');
 
             // console.log($('.speech_bubble').css('display'));
             $('.anchor').addClass('anchor_fix');
@@ -329,11 +346,17 @@ function show_section(icon,index){
                 $('.speech_bubble').css('top',offset['top']-scrollTop-height-10+'px');
                 $('.speech_bubble').css('left',offset['left']-scrollLeft+'px');
 
-                $('.bubble_text').text(element['content']);
+                $('.bubble_text').val(element['content']);
                 $('.speech_bubble').text(element['content']);
                 // console.log(element['content']);
                 // console.log(element['selector']);
                 // console.log(element['index']);
+            } else {
+                $('.speech_bubble').css('display','none');
+                $('.speech_bubble_div').css('display','none');
+                $('.bubble_text').val('');
+                $('.speech_bubble').text('');
+
             }
         }
         // console.log(JSON['onboardings_list'][index]);
@@ -582,6 +605,7 @@ $(document).ready(function(){
                     e.preventDefault();
                     e.stopPropagation();
                     $('.anchor').addClass('anchor_fix');
+                    $('.anchor_fix').css('display', 'block')
                     $('.anchor_fix').removeClass('anchor');
 
                     $('.anchor_text').text('SCREEN FROZEN');
@@ -600,6 +624,7 @@ $(document).ready(function(){
 
                     var height = $('.speech_bubble').outerHeight();
 
+                    $('.speech_bubble_div').css('display', 'block');
                     $('.speech_bubble').css('display','block');
                     $('.speech_bubble').css('top',offset['top']-scrollTop-height-10+'px');
                     $('.speech_bubble').css('left',offset['left']-scrollLeft+'px');
@@ -656,10 +681,15 @@ $(document).ready(function(){
         url = new_url;
         current_url = new_url;
         iFrameAlreadyLoaded = false;
+        focusOnboarding = {};
+        currentOrder = -1;
+
+        $('.speech_bubble_div').css('display', 'none');
+        $('.speech_bubble_div').find("img").remove();
+        $('.speech_bubble').css('display', 'none');
+
         $('#iframe').attr('src', url);
-
-
-        });
+    });
 
 
     //   $('.bubble').on('click',function(){
@@ -750,6 +780,10 @@ $(document).ready(function(){
         },function(){
             $('.iframe_overlay').css('display','none');
         });
+
+        $('.speech_bubble_div').css('display', 'none');
+        $('.speech_bubble_div').find("img").remove();
+        $('.speech_bubble').css('display', 'none');
 
     }
 

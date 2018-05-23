@@ -5,13 +5,24 @@ getOnboardingsByUrl = function(url) {
         contentType: "application/json",
         data: {url: url}
     }).then(function (data) {
-        load_onboardings(JSON.parse(data));
+        var ret = JSON.parse(data);
+
+        ret.onboardings.sort(function(a, b) {
+            return a.order - b.order;
+        });
+
+        load_onboardings(ret);
 
 
     });
 };
 
 saveOnboardings = function() {
+
+    for (var i = 0; i < globalJSON.onboardings.length; i++) {
+        globalJSON.onboardings[i].order = i;
+    }
+
     $.ajax({
         type: "POST",
         url: "onboarder/OnboardingSet",
