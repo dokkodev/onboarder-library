@@ -7,12 +7,12 @@ getOnboardingsByUrl = function(url) {
     }).then(function (data) {
         var ret = JSON.parse(data);
 
-        ret.onboardings.sort(function(a, b) {
-            return a.order - b.order;
-        });
-
+        if (ret) {
+            ret.onboardings.sort(function (a, b) {
+                return a.order - b.order;
+            });
+        }
         load_onboardings(ret);
-
 
     });
 };

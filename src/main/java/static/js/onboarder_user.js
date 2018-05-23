@@ -14,17 +14,19 @@ function fetchOnboardings(url) {
 
         var ret = JSON.parse(data);
 
-        ret.onboardings.sort(function(a, b) {
-            return a.order - b.order;
-        });
+        if (ret) {
+            ret.onboardings.sort(function (a, b) {
+                return a.order - b.order;
+            });
 
-        // ret.onboardings.forEach(function(element) {
-        //     console.log(element);
-        // });
+            // ret.onboardings.forEach(function(element) {
+            //     console.log(element);
+            // });
 
-        onboardings = ret.onboardings;
-        jQuery('body').append(speechBubbleHTML);
-        displayOnboarding(0);
+            onboardings = ret.onboardings;
+            jQuery('body').append(speechBubbleHTML);
+            displayOnboarding(0);
+        }
     });
 }
 
