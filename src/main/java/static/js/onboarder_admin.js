@@ -96,7 +96,7 @@ function load_onboardings(onboardingJSONS){
     $(".onboarding").remove();
 
     // 각 온보딩에 대해서
-    onboardingJSONS['onboardings'].forEach(function(element){
+    globalJSON['onboardings'].forEach(function(element){
         var icon_src = '';
         var id = '';
 
@@ -257,6 +257,7 @@ function new_onboarding(div, new_name, icon){
             //TODO
             globalJSON.url = url;
         }
+
         if(globalJSON.onboardings[focusOnboarding.order]) {
             console.log("Replacing");
             globalJSON.onboardings[focusOnboarding.order] = focusOnboarding;
@@ -351,6 +352,7 @@ function show_section(icon,index){
                 $('.speech_bubble').css('left',offset['left']-scrollLeft+'px');
 
                 $('.bubble_text').val(element['content']);
+                $('.speech_bubble').text('');
                 $('.speech_bubble').text(element['content']);
                 // console.log(element['content']);
                 // console.log(element['selector']);
@@ -569,6 +571,7 @@ $(document).ready(function(){
             getOnboardingsByUrl(url);
             //load_onboardings(globalJSON);
         }
+        $('.anchor_fix').css('display', 'none');
 
     });
 
@@ -688,10 +691,13 @@ $(document).ready(function(){
         iFrameAlreadyLoaded = false;
         focusOnboarding = {};
         currentOrder = -1;
+        maxOrderIndex = 0;
 
         $('.speech_bubble_div').css('display', 'none');
         $('.speech_bubble_div').find("img").remove();
         $('.speech_bubble').css('display', 'none');
+        $('._section').css('display','none');
+
 
         $('#iframe').attr('src', url);
     });
@@ -709,6 +715,7 @@ $(document).ready(function(){
 
     // new onboarding 버튼을 눌렀을때 일어나는 일들
     function new_onboarding_onclick(){
+        $('.property_row').remove();
         choose_div = $("<div class='choose_div'></div>");
         var popup_icon = $("<div class='choose_icon' id='popup'><img src='popup_icon.png' /></div>");
         var swipe_screen_icon = $("<div class='choose_icon' id='swipe_screen'><img src='swipe_screen_icon.png' /></div>");
@@ -742,7 +749,7 @@ $(document).ready(function(){
             //JSON WRITE
             // focus onboarding init
             focusOnboarding = {
-                "order": ++maxOrderIndex,
+                "order": maxOrderIndex++,
                 "type": divIdAttr == 'swipe_screen' ? 'Swipe' : 'Sequence'
             };
 
@@ -906,6 +913,8 @@ $(document).ready(function(){
                     img.css('width', '100%');
                     $('.speech_bubble_div').append(img);
                     $('.speech_bubble_div').css('margin-top', '20px');
+                    $('.speech_bubble_div').css('display', 'block');
+
                 });
 
 
