@@ -91,6 +91,8 @@ function displayOnboarding(index) {
     }
 
     jQuery('.speech_bubble_div').append('<button name="close" class="close_button">X</button>');
+    jQuery('.close_button').css('all', 'initial');
+    jQuery('.close_button').css('font-family', "'arial', sans-serif");
 
     var bubbleOffset = jQuery('.speech_bubble').offset();
     jQuery('.close_button').css('background-color', 'white');
@@ -115,6 +117,7 @@ function displayOnboarding(index) {
 
     if (onboardings[index + 1]) {
         jQuery('.speech_bubble_div').append('<button name="next" class="next_button">Next</button>');
+        jQuery('.next_button').css('all', 'initial');
 
         jQuery('.next_button').css('background-color', 'white');
 
