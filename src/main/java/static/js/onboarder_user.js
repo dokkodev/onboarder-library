@@ -137,10 +137,10 @@ function displayOnboarding(index) {
 
         jQuery('.next_button').css('position', 'absolute');
         jQuery('.next_button').css('background-color', "#F2FDE5");
-        jQuery('.next_button').css('top', bubbleOffset.top + 70);
-        jQuery('.next_button').css('left', bubbleOffset.left + 115);
+        jQuery('.next_button').css('padding', 5);
+        jQuery('.next_button').css('top', bubbleOffset.top + 62);
+        jQuery('.next_button').css('left', bubbleOffset.left + 105);
         if (element.type == 'Swipe') {
-            jQuery('.next_button').css('padding', 5);
 
             jQuery('.next_button').css('top', 580);
             jQuery('.next_button').css('left', 330);
