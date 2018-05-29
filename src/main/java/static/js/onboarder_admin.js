@@ -735,6 +735,8 @@ $(document).ready(function(){
 
             if (divIdAttr == 'popup'){
                 console.log('popup');
+                alert("coming soon");
+                return
             }
             else if (divIdAttr == 'swipe_screen'){
                 $('.iframe_overlay').css('display','none');
