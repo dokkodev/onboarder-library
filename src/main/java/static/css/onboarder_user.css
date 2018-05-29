@@ -31,3 +31,9 @@
     position: absolute;
     z-index: 4;
 }
+
+.onboarding-open{
+
+    overflow:hidden; // 팝업열었을때 addClass로 속성추가 후 스크롤막기위한 css
+
+}
