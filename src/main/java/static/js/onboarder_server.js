@@ -20,7 +20,10 @@ getOnboardingsByUrl = function(url) {
 saveOnboardings = function() {
 
     for (var i = 0; i < globalJSON.onboardings.length; i++) {
-        globalJSON.onboardings[i].order = i;
+        console.log(globalJSON);
+        if (globalJSON.onboardings[i]) {
+            globalJSON.onboardings[i].order = i;
+        }
     }
 
     $.ajax({

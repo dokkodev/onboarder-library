@@ -1,7 +1,7 @@
 var iFrameAlreadyLoaded = false;
 
 // 지금 현재 맥시멈 인덱스
-var maxOrderIndex = 0;
+var maxOrderIndex = -1;
 
 // 지금 포커스 되어 있는 온보딩 인덱스
 var currentOrder = -1;
@@ -149,12 +149,17 @@ function load_onboardings(onboardingJSONS){
 
         // delete 버튼 누르면 ui 에서도 지우고 json 에서도 지운다.
         delete_button.on('click',function(){
-            $(this).parent().remove();
+            console.log(globalJSON);
+
             resetGlobalsOnDelete(onboarding_div.data('index'));
 
+            console.log(globalJSON);
             for (var i = 0; i < globalJSON.onboardings.length; i++) {
                 globalJSON.onboardings[i].order = i;
             }
+            console.log(globalJSON);
+            $(this).parent().remove();
+
             maxOrderIndex--;
         });
 
@@ -749,7 +754,7 @@ $(document).ready(function(){
             //JSON WRITE
             // focus onboarding init
             focusOnboarding = {
-                "order": maxOrderIndex++,
+                "order": ++maxOrderIndex,
                 "type": divIdAttr == 'swipe_screen' ? 'Swipe' : 'Sequence'
             };
 

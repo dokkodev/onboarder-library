@@ -77,7 +77,7 @@ function displayOnboarding(index) {
         var height = jQuery('.speech_bubble').outerHeight();
 
         console.log(offset);
-        jQuery('.speech_bubble').css('top', offset['top'] - height + 'px');
+        jQuery('.speech_bubble').css('top', offset['top'] - height - 10 + 'px');
         jQuery('.speech_bubble').css('left', offset['left'] + 'px');
 
 
@@ -146,6 +146,7 @@ function displayOnboarding(index) {
         //jQuery('.speech_bubble').addClass('next_button');
 
         jQuery('.next_button').on('click', function() {
+            jQuery('.speech_bubble_div').remove();
             jQuery('.speech_bubble').remove();
             console.log(jQuery('.speech_bubble'));
             jQuery('body').append(speechBubbleHTML);
