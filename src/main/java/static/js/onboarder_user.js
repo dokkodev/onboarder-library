@@ -108,12 +108,14 @@ function displayOnboarding(index) {
 
 
     jQuery('.close_button').css('position', 'absolute');
-    jQuery('.close_button').css('top', bubbleOffset.top + 3);
+    jQuery('.close_button').css('top', bubbleOffset.top);
     jQuery('.close_button').css('height', 20);
     jQuery('.close_button').css('width', 20);
+    jQuery('.close_button').css('text-align', 'center');
+    jQuery('.close_button').css('background-color', 'gray');
 
     if (element.type == "Sequence") {
-        jQuery('.close_button').css('left', bubbleOffset.left + 103);
+        jQuery('.close_button').css('left', bubbleOffset.left + 140);
     }
 
     if (element.type == 'Swipe') {
@@ -134,8 +136,9 @@ function displayOnboarding(index) {
         jQuery('.next_button').css('background-color', 'white');
 
         jQuery('.next_button').css('position', 'absolute');
-        jQuery('.next_button').css('top', bubbleOffset.top + 50);
-        jQuery('.next_button').css('left', bubbleOffset.left + 88);
+        jQuery('.next_button').css('background-color', "#F2FDE5");
+        jQuery('.next_button').css('top', bubbleOffset.top + 70);
+        jQuery('.next_button').css('left', bubbleOffset.left + 115);
         if (element.type == 'Swipe') {
             jQuery('.next_button').css('padding', 5);
 
