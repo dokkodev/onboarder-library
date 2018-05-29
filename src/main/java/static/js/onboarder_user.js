@@ -47,6 +47,14 @@ function displayOnboarding(index) {
     jQuery('.speech_bubble_div').css('top', '0');
     jQuery('.speech_bubble_div').css('left', '0');
 
+    jQuery("body").addClass('onboarding-open'); //overflow:hidden 추가
+
+
+    // jQuery('#element').on('scroll touchmove mousewheel', function(event) {
+    //     event.preventDefault();
+    //     event.stopPropagation();
+    //     return false;
+    // });
 
     if (element.type == 'Sequence') {
 
@@ -88,6 +96,7 @@ function displayOnboarding(index) {
         var img = jQuery("<img src='" + element['image_url'] + "'>");
         img.css('width', '100%');
         jQuery('.speech_bubble_div').append(img);
+
     }
 
     jQuery('.speech_bubble_div').append('<button name="close" class="close_button">X</button>');
@@ -113,6 +122,9 @@ function displayOnboarding(index) {
 
     jQuery('.close_button').on('click', function() {
         jQuery('.speech_bubble_div').remove();
+        // jQuery('#element').off('scroll touchmove mousewheel');
+        jQuery("body").removeClass('onboarding-open'); //overflow:hidden 추가
+
     });
 
     if (onboardings[index + 1]) {
