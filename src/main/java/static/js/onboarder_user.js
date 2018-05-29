@@ -62,7 +62,7 @@ function displayOnboarding(index) {
         //
 
         jQuery('.speech_bubble_div').find("img").remove();
-        jQuery('.speech_bubble_div').css('margin-top', '4px');
+        // jQuery('.speech_bubble_div').css('margin-top', '4px');
 
         var found_div = jQuery(document).contents().find(element['selector'] + ':eq(' + element['index'] + ')');
         //found_div.css('border', '2px solid black');
