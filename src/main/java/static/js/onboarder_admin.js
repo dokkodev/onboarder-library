@@ -12,46 +12,7 @@ var focusOnboarding = {};
 var current_url="";
 
 // global 변수 JSON, 페이지 로딩 될때 ($('#iframe').on('load'... 참조) 값이 바뀐다. (밑에는 그냥 format 보여주기 용)
-var globalJSON = {
-    "url": "naver.html",
-    "onboardings": [
-        {
-            "order":"1",
-            "type":"Swipe",
-            "name": "blah3",
-            "image_url": "swipe1.png"
-        },
-
-        {
-            "order":"2",
-            "type":"Swipe",
-            "name": "blah5",
-            "image_url": "swipe3.png"
-        },
-        {
-            "order":"3",
-            "type": "Sequence",
-            "name": "blah",
-            "content": "This section allows users to select the type of article they want to view (in this case, sports).",
-            "selector": "a",
-            "index": "27"
-        },
-        {
-            "order":"4",
-            "type":"Swipe",
-            "name": "blah4",
-            "image_url": "swipe2.png"
-        },
-        {
-            "order":"5",
-            "type": "Sequence",
-            "name": "blah2",
-            "content": "This section shows the current most popular search keyword. :)",
-            "selector": "h3",
-            "index": "1"
-        }
-    ]
-};
+var globalJSON = {};
 
 // 현재 포커스를 글로벌에 저장하고 새로운 포커스로 전환한다.
 function changeFocus(index) {
@@ -689,7 +650,7 @@ $(document).ready(function(){
     });
 
     // url 검색
-    $('.url_submit').on('click', function () {
+    function url_focus_off(){
         var new_url = $(".url_text").val();
         url = new_url;
         current_url = new_url;
@@ -705,7 +666,16 @@ $(document).ready(function(){
 
 
         $('#iframe').attr('src', url);
+    };
+
+    $('.url_text').on('keypress',function(e){
+        if (e.which == 13){
+            url_focus_off();
+        }
     });
+
+    // 다른데 클릭해도 포커스 오프
+    $('.url_text').focusout(url_focus_off);
 
 
     //   $('.bubble').on('click',function(){
