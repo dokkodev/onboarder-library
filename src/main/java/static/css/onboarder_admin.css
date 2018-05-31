@@ -257,8 +257,16 @@ body{
  }
 
 .side_bar .url_text{
-    width: 150px;
+    line-height: 30px;
+    font-size: 15px;
+    width: 240px;
     height: 30px;
+    color: #575B52;
+    display: inline-block;
+    padding-left: 10px;
+    overflow-x: hidden;
+    white-space: nowrap;
+    border: none;
     text-align: left;
 }
 
